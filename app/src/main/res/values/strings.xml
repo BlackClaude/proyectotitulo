@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">CryptoCoin Sim</string>
+    <string name="comenzar">Comenzar</string>
+    <string name="iniciar_sim">Iniciar Simulación</string>
+    <string name="edit_text_2_ex">CriptoPepito</string>
+    <string name="texv2">Ingrese su Nombre</string>
+    <string name="texv3">Ingrese nombre criptomoneda</string>
+    <string name="Cargar">Cargar Simulación</string>
+    <string name="Nuevasim">Nueva Simulación</string>
+    <string name="seldif">Selecciona Dificultad</string>
+    <string name="beginner">Principiante</string>
+    <string name="tut">Tutorial</string>
+    <string name="advanced">Avanzado</string>
+    <string name="Expert">Experto</string>
+    <string name="start">Iniciar</string>
+    <string name="capini">Capital Inicial</string>
+    <string name="timesim">Cantidad de Tiempo</string>
+    <string name="dias">14</string>
+    <string name="clp">100000</string>
+</resources>
