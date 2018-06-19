@@ -7,6 +7,8 @@ import android.view.View;
 
 public class Difficulties extends AppCompatActivity {
 
+    static char dif;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -14,7 +16,14 @@ public class Difficulties extends AppCompatActivity {
     }
 
     public void buttonGoBeginner(View v){
+        dif = 'B';
         Intent intent = new Intent(this, Beginner.class);
+        startActivity(intent);
+    }
+
+    public void buttonGoAdvanced(View v){
+        dif = 'A';
+        Intent intent = new Intent(this, Advanced.class);
         startActivity(intent);
     }
 
@@ -24,10 +33,7 @@ public class Difficulties extends AppCompatActivity {
     }
 
 
-    public void buttonGoAdvanced(View v){
-        Intent intent = new Intent(this, Advanced.class);
-        startActivity(intent);
-    }
+
 
     public void buttonGoExpert(View v){
         Intent intent = new Intent(this, Expert.class);

@@ -11,7 +11,7 @@ import android.content.SharedPreferences;
 import android.widget.Toast;
 
 
-public class Beginner extends AppCompatActivity {
+public class Advanced extends AppCompatActivity {
 
     EditText capInit;
     EditText cantTime;
@@ -20,11 +20,11 @@ public class Beginner extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.beginner);
+        setContentView(R.layout.advanced);
 
-        capInit = findViewById(R.id.editText3);
-        cantTime = findViewById(R.id.editText);
-        clickButton = findViewById(R.id.button2);
+        capInit = findViewById(R.id.capIA);
+        cantTime = findViewById(R.id.timeIA);
+        clickButton = findViewById(R.id.InitA);
 
 
 

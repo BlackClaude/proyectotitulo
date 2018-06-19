@@ -19,8 +19,6 @@ import java.util.ArrayList;
 public class Sim extends AppCompatActivity {
 
     private LineChart mLChart;
-    ArrayList<Float> varCap = new ArrayList<>();
-    ArrayList<Integer> varTim = new ArrayList<>();
     private LineData data;
     private ArrayList<Entry> yVals1;
 
@@ -47,7 +45,6 @@ public class Sim extends AppCompatActivity {
 
     public void verNoticias(View v){
         Intent intent = new Intent(this, Noticias.class);
-        //intent.putExtra("varlorbc", flag);
         intent.putExtra("ultimaWea", yVals1.get(yVals1.size() - 1).getY());
         startActivity(intent);
     }
@@ -60,42 +57,63 @@ public class Sim extends AppCompatActivity {
 
     public  void setData(int cap, int time){
         yVals1 = new ArrayList<>();
-        SharedPreferences.Editor spe = getPreferences(MODE_PRIVATE).edit();
         float bitcoin = cap;
         yVals1.add(new Entry(0, bitcoin));
-        for (int i=1; i<=time; i++){
-            if(i % 2 == 0 && i % 5 == 0){
-                bitcoin = (float) (bitcoin + (bitcoin * 0.05)); //dar valores al "Y"
-                yVals1.add(new Entry(i, bitcoin));             //agregar valores x = x+1; y = math.random*range
-                flag = 1;
-            }else if(i % 2 == 0 && i % 3 == 0){
-                bitcoin = (float) (bitcoin - (bitcoin * 0.031416));
-                yVals1.add(new Entry(i, bitcoin));
-            } else if (i % 7 == 0) {
-                bitcoin = (float) (bitcoin + (bitcoin * 0.18));
-                yVals1.add(new Entry(i, bitcoin));
-            } else if (i % 3 == 0){
-                bitcoin = (float) (bitcoin + (bitcoin * 0.75));
-                yVals1.add(new Entry(i, bitcoin));
-            } else if (i % 5 == 0){
-                bitcoin = (float) (bitcoin + bitcoin/2.19);
-                yVals1.add(new Entry(i, bitcoin));
-            } else if (i % 2 == 0){
-                bitcoin = (float) (bitcoin - bitcoin /2.115);
-                yVals1.add(new Entry(i, bitcoin));
-            } else if (i % 1 == 0){
-                bitcoin = (float) (bitcoin +  bitcoin * 0.11 );
-                yVals1.add(new Entry(i, bitcoin));
-            }
-            varCap.add(bitcoin);
-            varTim.add(time);
+        if(Difficulties.dif == 'B'){
 
-            spe.putInt("varCap", (int)bitcoin);
-            spe.putInt("varTim", time);
-            spe.commit();
+            for (int i=1; i<=time; i++){
+                if(i % 2 == 0 && i % 5 == 0){
+                    bitcoin = (float) (bitcoin + bitcoin * 0.0015);
+                    yVals1.add(new Entry(i, bitcoin));
+
+                }else if(i % 2 == 0 && i % 3 == 0){
+                    bitcoin = (float) (bitcoin - (bitcoin * 0.031416));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 7 == 0) {
+                    bitcoin = (float) (bitcoin + (bitcoin * 0.18));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 3 == 0){
+                    bitcoin = (float) (bitcoin + (bitcoin * 0.75));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 5 == 0){
+                    bitcoin = (float) (bitcoin + bitcoin/2.19);
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 2 == 0){
+                    bitcoin = (float) (bitcoin - bitcoin /2.115);
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 1 == 0){
+                    bitcoin = (float) (bitcoin +  bitcoin * 0.11 );
+                    yVals1.add(new Entry(i, bitcoin));
+                }
+            }
+        }else if (Difficulties.dif == 'A'){
+            for (int i=1; i<=time; i++){
+                if(i % 2 == 0 && i % 5 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(2 - 0.5) + 0.5));
+                    yVals1.add(new Entry(i, bitcoin));
+                }else if(i % 2 == 0 && i % 3 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(2 - 0.3) + 0.1));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 7 == 0) {
+                    bitcoin = (float) (bitcoin *(Math.random()*(4.2 - 0.18) + 0.18));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 3 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(2.5 - 0.75) + 0.75));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 5 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(2.19 - 0.19) + 0.19));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 2 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(2 - 0.01) + 0.01));
+                    yVals1.add(new Entry(i, bitcoin));
+                } else if (i % 1 == 0){
+                    bitcoin = (float) (bitcoin *(Math.random()*(1.76 - 0.11) + 0.11));
+                    yVals1.add(new Entry(i, bitcoin));
+                }
+            }
+
         }
 
-        Toast.makeText(this,"Se guardo Correctamente", Toast.LENGTH_SHORT).show();
         LineDataSet set1;
 
         set1 = new LineDataSet(yVals1, "Bitcoin");
