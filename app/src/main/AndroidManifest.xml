@@ -23,6 +23,8 @@
         <activity android:name=".Difficulties"/>
         <activity android:name=".Beginner"/>
         <activity android:name=".Advanced"/>
+        <activity android:name=".Compra"/>
+        <activity android:name=".Venta"/>
 
 
     </application>

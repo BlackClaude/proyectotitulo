@@ -25,7 +25,7 @@ public class Noticias extends AppCompatActivity {
         sim = new Sim();
         Intent myIntent = getIntent();
         float ultimoValorWea = myIntent.getFloatExtra("ultimaWea", 0F);
-        Toast.makeText(this,"Analizando el valor :"+ultimoValorWea, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"Analizando el valor :"+ultimoValorWea, Toast.LENGTH_SHORT).show();
 
 
         final TextView textViewToChange = findViewById(R.id.textView4);
@@ -62,8 +62,8 @@ public class Noticias extends AppCompatActivity {
     }
 
 
-    public void volverAtras(View v){
-        Log.d("WEA","HOLA");
+    /*public void volverAtras(View v){
+        Log.d("volverAtrasNoticias","Boton ejecutado con éxito");
         onBackPressed();
-    }
+    }*/
 }

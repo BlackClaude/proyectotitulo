@@ -17,4 +17,13 @@
     <string name="timesim">Cantidad de Tiempo</string>
     <string name="dias">14</string>
     <string name="clp">100000</string>
+    <string name="compraboton">Comprar C!</string>
+    <string name="venderC">vender C!</string>
+    <string name="valorC">Valor C! :</string>
+    <string name="Wallet">$</string>
+    <string name="cantidad">0</string>
+    <string name="cantidadCompra">Ingresa la Cantidad de C! a comprar:</string>
+    <string name="cantcrypt">C! : </string>
+    <string name="dia">Avanzar al Día Siguiente</string>
+    <string name="Fin">Fin de la Simulación</string>
 </resources>

@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="#0043b4"
+        android:backgroundTint="@color/colorAccent"
         android:onClick="buttonGoBeginner"
         android:text="@string/beginner"
         android:textColor="#ffffff"
