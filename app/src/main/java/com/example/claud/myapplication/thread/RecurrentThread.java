@@ -3,7 +3,7 @@ package com.example.claud.myapplication.thread;
         import java.util.ArrayList;
         import java.util.List;
 
-public class RecurrentThread implements Runnable {
+public class RecurrentThread extends Thread {
 
 
     private List<ActionListener> listeners;
@@ -11,7 +11,6 @@ public class RecurrentThread implements Runnable {
     private long millisSleep;
 
     public RecurrentThread(long millisSleep){
-        running = true;
         this.millisSleep = millisSleep;
     }
 
@@ -23,7 +22,13 @@ public class RecurrentThread implements Runnable {
         listeners.add(l);
     }
 
-    public void stop(){
+    @Override
+    public void start(){
+        super.start();
+        running = true;
+    }
+
+    public void stopThread(){
         running = false;
     }
 

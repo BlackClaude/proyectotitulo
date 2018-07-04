@@ -3,7 +3,6 @@ package com.example.claud.myapplication;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.claud.myapplication.model.ApplicationGlobals;
 import com.example.claud.myapplication.thread.ActionListener;
 import com.example.claud.myapplication.thread.RecurrentThread;
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,36 +19,32 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class Sim extends AppCompatActivity{
 
+public class Sim extends AppCompatActivity implements ActionListener{
+    private final static long MS_THREAD = 1000;
     private LineChart mLChart;
-
-    ArrayList<Float> varCap = new ArrayList<>();
-    ArrayList<Integer> varTim = new ArrayList<>();
+    private ArrayList<Float> varCap = new ArrayList<>();
+    private ArrayList<Integer> varTim = new ArrayList<>();
     private LineData data;
     private ArrayList<Entry> yVals1;
-    float dineroRestante;
-    float CryptC = 29;
-    int cantidadCrypt = 0;
-    int cont= 0;
-    int tiempo = 0;
-    float inicial = 0;
-    float nuevoValor= 0;
-
-
-
-
-
-
+    private RecurrentThread thread;
+    private float dineroRestante, CryptC = 29, inicial = 0, nuevoValor= 0;
+    private int cantidadCrypt = 0;
+    private int cont= 0, tiempo = 0, cont2= 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sim);
-       /* Thread thread = new Thread (new RecurrentThread(1000));
-        thread.start();*/
+        thread = new RecurrentThread(MS_THREAD);
+        thread.addListener(this);
+        thread.start(); // inicia el hilo
 
         mLChart = findViewById(R.id.Lchart1);
         Bundle params = this.getIntent().getExtras();
@@ -67,15 +63,15 @@ public class Sim extends AppCompatActivity{
         final TextView cantC = findViewById(R.id.textView);
 
 
-        valorC.setText("Valor C! :" + nuevoValor);
+        valorC.setText("Valor ฿ :" + nuevoValor);
         wallet.setText("Saldo: $" + dineroRestante);
-        cantC.setText("C! :" + cantidadCrypt);
+        cantC.setText("฿ :" + cantidadCrypt);
 
 
     }
 
 
-
+    //INTENT DE ACTIVIDAD PARA VER NOTICIAS
     public void verNoticias(View v){
         Intent intent = new Intent(this, Noticias.class);
         //intent.putExtra("varlorbc", flag);
@@ -83,6 +79,7 @@ public class Sim extends AppCompatActivity{
         startActivity(intent);
     }
 
+    //FUNCIÓN PARA COMPRAR CRIPTOMONEDA (A MIGRAR A ACTIVIDAD PROPIA)
     public void comprarCripto(View v) {
         EditText cantidadComprada = findViewById(R.id.editText4);
         int cantComprada = Integer.parseInt(cantidadComprada.getText().toString());
@@ -100,13 +97,14 @@ public class Sim extends AppCompatActivity{
             dineroRestante = dineroRestante - (CryptC*cantComprada);
             cantidadCrypt = cantidadCrypt + cantComprada;
             wallet.setText("Saldo: $" + dineroRestante);
-            cantC.setText("C! :" + cantidadCrypt);
+            cantC.setText("฿ :" + cantidadCrypt);
         }
         else{
             Toast.makeText(this, "No tienes saldo suficiente para realizar esta compra.", Toast.LENGTH_SHORT).show();
         }
     }
 
+    //FUNCIÓN PARA VENDER CRIPTOMONEDA (A MIGRAR A ACTIVIDAD PROPIA)
     public void venderCripto(View v){
         EditText cantidadVendida = findViewById(R.id.editText5);
         int cantVendida = Integer.parseInt(cantidadVendida.getText().toString());
@@ -124,7 +122,7 @@ public class Sim extends AppCompatActivity{
             dineroRestante = dineroRestante + (nuevoValor*cantVendida);
             cantidadCrypt = cantidadCrypt - cantVendida;
             wallet.setText("Saldo: $" + dineroRestante);
-            cantC.setText("C! :" + cantidadCrypt);
+            cantC.setText("฿ :" + cantidadCrypt);
         }
         else{
             Toast.makeText(this, "No posees esta cantidad de criptomonedas.", Toast.LENGTH_SHORT).show();
@@ -137,13 +135,7 @@ public class Sim extends AppCompatActivity{
 
     }
 
-    /*@Override
-    public void actionPerformed() {
-    }
-    cont++;
-    Log.d("ComprobacionValores","ciclo numero  " + cont);*/
-
-
+    //FUNCIÓN PARA POBLAR GRÁFICO
     public  void setData(int cont, int time){
 
         yVals1 = new ArrayList<>();
@@ -188,11 +180,9 @@ public class Sim extends AppCompatActivity{
             spe.putInt("varTim", time);
             spe.commit();
         }
-
-        //Toast.makeText(this,"Se guardo Correctamente", Toast.LENGTH_SHORT).show();
         LineDataSet set1;
 
-        set1 = new LineDataSet(yVals1, "valor C!");
+        set1 = new LineDataSet(yVals1, "valor ฿");
         set1.setColor(Color.BLUE);
         set1.setDrawCircles(true);
         set1.setLineWidth(7f);
@@ -200,22 +190,58 @@ public class Sim extends AppCompatActivity{
         data = new LineData(set1);
         mLChart.setData(data);
     }
-    public void diaSiguiente(View v){
+
+    //FUNCIÓN PARA CAMBIAR AL DÍA SIGUIENTE Y EL VALOR DE LA CRIPTOMONEDA
+   public void diaSiguiente(View v){
         final TextView valorC = findViewById(R.id.textView7);
-        Intent intent = new Intent(this, Compra.class);
+        Intent intent = new Intent(this, FinSim.class);
         cont++;
         if (cont < tiempo) {
             setData(cont, tiempo);
             Log.d("ComprobacionValores", "cont " + cont + " tiempo " + tiempo);
-            valorC.setText("Valor C! :" + Math.round(nuevoValor));
+            valorC.setText("Valor ฿ :" + Math.round(nuevoValor));
         }else{
             Bundle params = new Bundle();
             params.putFloat("inicial", inicial);
             params.putFloat("final", dineroRestante);
             intent.putExtras(params);
             startActivity(intent);
+            thread.stopThread();
         }
     }
 
 
+    //LECTOR DE ARCHIVO CSV
+
+    /*private void readCryptData(){
+        InputStream is = getResources().openRawResource(R.raw.data);
+        BufferedReader reader = new BufferedReader(){
+            new InputStreamReader (is, Charset.forName("UTF-8"))
+        };
+
+        String line;
+        try{
+            while ((line = reader.readLine() != null)){
+                String()tokens = line.split("',");
+
+            }
+        }catch (IOException e){
+            Log.wtf("Sim","No se pudo leer la línea " + line, e);
+            e.printStackTrace();
+        }
+    }*/
+
+    //FUNCIÓN DE PRUEBA CLASE DE VARIABLES GLOBALES
+    public void setGlobal(){
+        ApplicationGlobals ap = (ApplicationGlobals) this.getApplication();
+        ap.setValorBitcoin(23);
+    }
+
+
+    //FUNCIÓN PARA INTERACTUAR CON THREAD
+    @Override
+    public void actionPerformed() {
+        cont2++;
+        Log.d("ComprobacionValores","cryptC = " + cont2);
+    }
 }

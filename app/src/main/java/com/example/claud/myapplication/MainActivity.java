@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonGoBeginner(View v){
-        Intent intent = new Intent(this, Beginner.class);
+        Intent intent = new Intent(this, Params.class);
         startActivity(intent);
     }
 

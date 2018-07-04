@@ -25,13 +25,7 @@ public class Advanced extends AppCompatActivity {
         capInit = findViewById(R.id.capIA);
         cantTime = findViewById(R.id.timeIA);
         clickButton = findViewById(R.id.InitA);
-
-
-
-
     }
-
-
 
     public void buttonGoSim(View v) {
 
