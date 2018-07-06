@@ -34,7 +34,7 @@ public class Params extends AppCompatActivity {
         params.putString("data", capital);
         params.putString("time", tiempo);
 
-        Toast.makeText(this, "Se Inicia la Simulación", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Se Inicia la Simulación", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, Sim.class);
         intent.putExtras(params);
         startActivity(intent);

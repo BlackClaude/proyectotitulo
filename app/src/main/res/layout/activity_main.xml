@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#405475"
+    android:background="@color/colorBg"
     tools:context=".MainActivity">
 
     <Button
@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="#6d80a4"
+        android:background="@color/colorAccent"
         android:onClick="buttonGoBeginner"
         android:text="@string/comenzar"
         android:textColor="#ffffff"

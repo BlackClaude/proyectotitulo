@@ -106,6 +106,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
 
     //FUNCIÓN PARA VENDER CRIPTOMONEDA (A MIGRAR A ACTIVIDAD PROPIA)
     public void venderCripto(View v){
+        //Intent intent = new Intent ()
         EditText cantidadVendida = findViewById(R.id.editText5);
         int cantVendida = Integer.parseInt(cantidadVendida.getText().toString());
         final TextView wallet = findViewById(R.id.textView9);
