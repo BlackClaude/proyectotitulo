@@ -27,4 +27,5 @@
     <string name="dia">Avanzar al Día Siguiente</string>
     <string name="Fin">Fin de la Simulación ฿</string>
     <string name="cript">Seleccionar Criptomoneda</string>
+    <string name="venta">Ingrese Cantidad a Vender:</string>
 </resources>

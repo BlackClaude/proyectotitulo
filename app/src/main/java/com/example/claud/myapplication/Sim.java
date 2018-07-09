@@ -1,8 +1,12 @@
 package com.example.claud.myapplication;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +49,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         thread = new RecurrentThread(MS_THREAD);
         thread.addListener(this);
         thread.start(); // inicia el hilo
+        yVals1 = new ArrayList<>();
 
         mLChart = findViewById(R.id.Lchart1);
         Bundle params = this.getIntent().getExtras();
@@ -139,39 +144,49 @@ public class Sim extends AppCompatActivity implements ActionListener{
     //FUNCIÓN PARA POBLAR GRÁFICO
     public  void setData(int cont, int time){
 
-        yVals1 = new ArrayList<>();
         SharedPreferences.Editor spe = getPreferences(MODE_PRIVATE).edit();
         float cryptoCoin = CryptC;
+        float ganancia = 0;
+
+        if (cantidadCrypt == 0){
+            ganancia = dineroRestante;
+        } else if (dineroRestante == 0){
+            ganancia = cantidadCrypt*nuevoValor;
+        }
+        else {
+            ganancia = dineroRestante +(cantidadCrypt*nuevoValor);
+        }
         yVals1.add(new Entry(0, cryptoCoin));
         for(int i=0;i<=cont;i++){
+            Log.d("ComprobacionValores", nuevoValor+" "+ i + " " + ganancia);
             if(i % 2 == 0 && i % 5 == 0){
                 cryptoCoin = (float) (cryptoCoin + (cryptoCoin * 0.05)); //dar valores al "Y"
-                yVals1.add(new Entry(i, cryptoCoin));             //agregar valores x = x+1; y = math.random*range
+                yVals1.add(new Entry(i, ganancia));             //agregar valores x = x+1; y = math.random*range
                 nuevoValor = cryptoCoin;
             }else if(i % 2 == 0 && i % 3 == 0){
                 cryptoCoin = (float) (cryptoCoin - (cryptoCoin * 0.031416));
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
             } else if (i % 7 == 0) {
                 cryptoCoin = (float) (cryptoCoin + (cryptoCoin * 0.18));
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
             } else if (i % 3 == 0){
                 cryptoCoin = (float) (cryptoCoin + (cryptoCoin * 0.75));
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
             } else if (i % 5 == 0){
                 cryptoCoin = (float) (cryptoCoin + cryptoCoin/2.19);
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
             } else if (i % 2 == 0){
                 cryptoCoin = (float) (cryptoCoin - cryptoCoin /2.115);
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
 
             } else if (i % 1 == 0){
                 cryptoCoin = (float) (cryptoCoin +  cryptoCoin * 0.11 );
-                yVals1.add(new Entry(i, cryptoCoin));
+                yVals1.add(new Entry(i, ganancia));
                 nuevoValor = cryptoCoin;
             }
             varCap.add(cryptoCoin);
@@ -183,13 +198,13 @@ public class Sim extends AppCompatActivity implements ActionListener{
         }
         LineDataSet set1;
 
-        set1 = new LineDataSet(yVals1, "valor ฿");
+        set1 = new LineDataSet(yVals1, "Total Ganado");
         set1.setColor(Color.BLUE);
         set1.setDrawCircles(true);
         set1.setLineWidth(7f);
-
         data = new LineData(set1);
         mLChart.setData(data);
+
     }
 
     //FUNCIÓN PARA CAMBIAR AL DÍA SIGUIENTE Y EL VALOR DE LA CRIPTOMONEDA
@@ -201,6 +216,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
             setData(cont, tiempo);
             Log.d("ComprobacionValores", "cont " + cont + " tiempo " + tiempo);
             valorC.setText("Valor ฿ :" + Math.round(nuevoValor));
+            notificationcall();
         }else{
             Bundle params = new Bundle();
             params.putFloat("inicial", inicial);
@@ -239,10 +255,29 @@ public class Sim extends AppCompatActivity implements ActionListener{
     }
 
 
-    //FUNCIÓN PARA INTERACTUAR CON THREAD
+    //FUNCIÓN PARA INTERACTUAR CON THREAD, se itera cada 1s actualmente.
     @Override
     public void actionPerformed() {
         cont2++;
-        Log.d("ComprobacionValores","cryptC = " + cont2);
+        if (cont2 == 5){
+            notificationcall();
+        }
+        //Log.d("ComprobacionValores","cryptC = " + cont2);
+    }
+    public void notificationcall(){
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "Cambio_Valor");
+
+        notificationBuilder.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setTicker("CryptoMoneda")
+                .setSmallIcon(R.drawable.button)
+                .setPriority(Notification.PRIORITY_MAX) // this is deprecated in API 26 but you can still use for below 26. check below update for 26 API
+                .setContentTitle("Cambio Valor Cryptomoneda")
+                .setContentText("Ahora la criptomoneda vale "+CryptC)
+                .setContentInfo("Cryptomoneda");
+
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notificationBuilder.build());
     }
 }
