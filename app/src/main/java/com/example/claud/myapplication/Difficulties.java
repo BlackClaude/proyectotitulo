@@ -17,7 +17,7 @@ public class Difficulties extends AppCompatActivity {
 
     public void buttonGoBeginner(View v){
         dif = 'B';
-        Intent intent = new Intent(this, Beginner.class);
+        Intent intent = new Intent(this, Params.class);
         startActivity(intent);
     }
 
@@ -26,17 +26,4 @@ public class Difficulties extends AppCompatActivity {
         Intent intent = new Intent(this, Advanced.class);
         startActivity(intent);
     }
-
-    /*public void buttonGoTutorial(View v){
-        Intent intent = new Intent(this, Tutorial.class);
-        startActivity(intent);
-    }
-
-
-
-
-    public void buttonGoExpert(View v){
-        Intent intent = new Intent(this, Expert.class);
-        startActivity(intent);
-    }*/
 }

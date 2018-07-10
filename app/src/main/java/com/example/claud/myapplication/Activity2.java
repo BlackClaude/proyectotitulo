@@ -13,8 +13,8 @@ public class Activity2 extends AppCompatActivity {
         setContentView(R.layout.activity_2);
     }
 
-    public void buttonGoDifficulties(View v){
-        Intent intent = new Intent(this, Difficulties.class);
+    public void buttonGoBeginner(View v){
+        Intent intent = new Intent(this, Params.class);
         startActivity(intent);
     }
 }

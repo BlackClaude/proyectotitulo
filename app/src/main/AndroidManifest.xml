@@ -3,6 +3,7 @@
     package="com.example.claud.myapplication">
 
     <application
+        android:name=".model.ApplicationGlobals"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,8 +22,10 @@
         <activity android:name=".Sim" />
         <activity android:name=".Noticias"/>
         <activity android:name=".Difficulties"/>
-        <activity android:name=".Beginner"/>
+        <activity android:name=".Params"/>
         <activity android:name=".Advanced"/>
+        <activity android:name=".FinSim"/>
+        <activity android:name=".Venta"/>
 
 
     </application>
