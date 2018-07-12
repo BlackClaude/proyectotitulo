@@ -24,7 +24,7 @@ public class Noticias extends AppCompatActivity {
         setContentView(R.layout.activity_noticias);
         sim = new Sim();
         Intent myIntent = getIntent();
-        float ultimoValor = myIntent.getFloatExtra("ultimaWea", 0F);
+        float ultimoValor = myIntent.getFloatExtra("DiaActual", 0F);
 
 
         final TextView textViewToChange = findViewById(R.id.textView4);

@@ -40,7 +40,10 @@ public class Sim extends AppCompatActivity implements ActionListener{
     private RecurrentThread thread;
     private float dineroRestante, CryptC = 29, inicial = 0, nuevoValor= 0;
     private int cantidadCrypt = 0;
-    private int cont= 0, tiempo = 0, cont2= 0;
+    private int cont= 0;
+    private int tiempo = 0;
+    private int cont2= 0;
+    private boolean flag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         final TextView valorC = findViewById(R.id.textView7);
         final TextView wallet = findViewById(R.id.textView9);
         final TextView cantC = findViewById(R.id.textView);
+        final TextView dia = findViewById(R.id.dia);
 
 
         valorC.setText("Valor ฿ :" + nuevoValor);
@@ -80,7 +84,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
     public void verNoticias(View v){
         Intent intent = new Intent(this, Noticias.class);
         //intent.putExtra("varlorbc", flag);
-        intent.putExtra("ultimaWea", yVals1.get(yVals1.size() - 1).getY());
+        intent.putExtra("DiaActual", yVals1.get(yVals1.size() - 1).getY());
         startActivity(intent);
     }
 
@@ -99,6 +103,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         else if (CryptC*cantComprada <= dineroRestante) {
 
             Toast.makeText(this, "Se ha comprado exitosamente " + cantComprada + " Cryptomonedas.", Toast.LENGTH_SHORT).show();
+            flag = true;
             dineroRestante = dineroRestante - (CryptC*cantComprada);
             cantidadCrypt = cantidadCrypt + cantComprada;
             wallet.setText("Saldo: $" + dineroRestante);
@@ -142,7 +147,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
     }
 
     //FUNCIÓN PARA POBLAR GRÁFICO
-    public  void setData(int cont, int time){
+    public  void setData(int i, int time){
 
         SharedPreferences.Editor spe = getPreferences(MODE_PRIVATE).edit();
         float cryptoCoin = CryptC;
@@ -156,9 +161,12 @@ public class Sim extends AppCompatActivity implements ActionListener{
         else {
             ganancia = dineroRestante +(cantidadCrypt*nuevoValor);
         }
-        yVals1.add(new Entry(0, cryptoCoin));
-        for(int i=0;i<=cont;i++){
-            Log.d("ComprobacionValores", nuevoValor+" "+ i + " " + ganancia);
+        if(i==0) {
+            yVals1.add(new Entry(0, ganancia));
+        }
+        //for(int i=0;i<=cont;i++){
+
+            Log.d("ComprobacionValores", "valor crypt= " + nuevoValor+" Día= "+ i + " Ganancia= " + ganancia+" arrayList= "+yVals1);
             if(i % 2 == 0 && i % 5 == 0){
                 cryptoCoin = (float) (cryptoCoin + (cryptoCoin * 0.05)); //dar valores al "Y"
                 yVals1.add(new Entry(i, ganancia));             //agregar valores x = x+1; y = math.random*range
@@ -195,13 +203,15 @@ public class Sim extends AppCompatActivity implements ActionListener{
             spe.putInt("varCap", (int)cryptoCoin);
             spe.putInt("varTim", time);
             spe.commit();
-        }
+        //}
         LineDataSet set1;
 
-        set1 = new LineDataSet(yVals1, "Total Ganado");
+        set1 = new LineDataSet(yVals1, "Capital Total Día Anterior");
         set1.setColor(Color.BLUE);
         set1.setDrawCircles(true);
         set1.setLineWidth(7f);
+       //set1.xAxis = mLChart.getXAxis();
+        //xAxis.setGranularity(1f);
         data = new LineData(set1);
         mLChart.setData(data);
 
@@ -217,6 +227,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
             Log.d("ComprobacionValores", "cont " + cont + " tiempo " + tiempo);
             valorC.setText("Valor ฿ :" + Math.round(nuevoValor));
             notificationcall();
+            Toast.makeText(this, "Se ha avanzado al Día "+cont+".", Toast.LENGTH_SHORT).show();
         }else{
             Bundle params = new Bundle();
             params.putFloat("inicial", inicial);
@@ -258,26 +269,34 @@ public class Sim extends AppCompatActivity implements ActionListener{
     //FUNCIÓN PARA INTERACTUAR CON THREAD, se itera cada 1s actualmente.
     @Override
     public void actionPerformed() {
+        if(flag){
         cont2++;
+        }
         if (cont2 == 5){
             notificationcall();
+            cont2=0;
+            flag=false;
         }
-        //Log.d("ComprobacionValores","cryptC = " + cont2);
+        Log.d("ComprobacionValores","cryptC = " + cont2);
     }
     public void notificationcall(){
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "Cambio_Valor");
 
-        notificationBuilder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setTicker("CryptoMoneda")
-                .setSmallIcon(R.drawable.button)
-                .setPriority(Notification.PRIORITY_MAX) // this is deprecated in API 26 but you can still use for below 26. check below update for 26 API
-                .setContentTitle("Cambio Valor Cryptomoneda")
-                .setContentText("Ahora la criptomoneda vale "+CryptC)
-                .setContentInfo("Cryptomoneda");
+        if(flag) {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "Cambio_Valor");
 
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notificationBuilder.build());
+            notificationBuilder.setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setTicker("CryptoMoneda")
+                    .setSmallIcon(R.drawable.button)
+                    .setPriority(Notification.PRIORITY_MAX) // this is deprecated in API 26 but you can still use for below 26. check below update for 26 API
+                    .setContentTitle("Twitter #Bitcoin")
+                    .setContentText("Algo ha pasado!")
+                    .setContentInfo("Cryptomoneda");
+
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(1, notificationBuilder.build());
+        }
+
     }
 }
