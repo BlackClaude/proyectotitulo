@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.claud.myapplication.model.ApplicationGlobals;
+import com.example.claud.myapplication.model.ValorBitcoin;
 import com.example.claud.myapplication.thread.ActionListener;
 import com.example.claud.myapplication.thread.RecurrentThread;
+import com.example.claud.myapplication.util.CsvReader;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -26,8 +28,11 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class Sim extends AppCompatActivity implements ActionListener{
@@ -43,6 +48,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
     private int cont= 0;
     private int tiempo = 0;
     private int cont2= 0;
+    int cont3=0;
     private boolean flag=false;
 
     @Override
@@ -53,6 +59,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         thread.addListener(this);
         thread.start(); // inicia el hilo
         yVals1 = new ArrayList<>();
+        readCryptData();
 
         mLChart = findViewById(R.id.Lchart1);
         Bundle params = this.getIntent().getExtras();
@@ -241,23 +248,21 @@ public class Sim extends AppCompatActivity implements ActionListener{
 
     //LECTOR DE ARCHIVO CSV
 
-    /*private void readCryptData(){
-        InputStream is = getResources().openRawResource(R.raw.data);
-        BufferedReader reader = new BufferedReader(){
-            new InputStreamReader (is, Charset.forName("UTF-8"))
-        };
-
-        String line;
-        try{
-            while ((line = reader.readLine() != null)){
-                String()tokens = line.split("',");
-
-            }
-        }catch (IOException e){
-            Log.wtf("Sim","No se pudo leer la línea " + line, e);
-            e.printStackTrace();
+    private void readCryptData(){
+        List<ValorBitcoin> valores = CsvReader
+                .getValorBitconByInputStream(getResources().openRawResource(R.raw.data));
+        Iterator<ValorBitcoin> it = valores.iterator();
+        int cont = 0;
+        while(it.hasNext() && cont < 10){
+            ValorBitcoin next = it.next();
+            //imprimir
+            Toast t=Toast.makeText(this,next.getTimeStampString(), Toast.LENGTH_SHORT);
+            t.show();
+            Log.i("ValorCsv", next.toString());
+            cont++;
         }
-    }*/
+
+    }
 
     //FUNCIÓN DE PRUEBA CLASE DE VARIABLES GLOBALES
     public void setGlobal(){
@@ -268,7 +273,22 @@ public class Sim extends AppCompatActivity implements ActionListener{
 
     //FUNCIÓN PARA INTERACTUAR CON THREAD, se itera cada 1s actualmente.
     @Override
-    public void actionPerformed() {
+    public void actionPerformed(){
+        //FUNCIÓN PARA LEER VALORES DE CRIPTOMONEDA DESDE ARCHIVO .CSV, DESACTIVADO ACTUALMENTE DEBIDO A PROBLEMAS CAUSADOS POR SER UNA FUENTE DE DATOS MUY GRANDE.
+        /*cont3++;
+        List<ValorBitcoin> valores = CsvReader
+                .getValorBitconByInputStream(getResources().openRawResource(R.raw.data));
+        Iterator<ValorBitcoin> it = valores.iterator();
+        int cont = 0;
+        while(it.hasNext() && cont < 10 && cont3 == 5){
+            ValorBitcoin next = it.next();
+            //imprimir
+            Toast t=Toast.makeText(this,next.getTimeStampString(), Toast.LENGTH_SHORT);
+            t.show();
+            Log.i("ValorCsv", next.toString());
+            cont++;
+        }*/
+
         if(flag){
         cont2++;
         }
@@ -277,7 +297,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
             cont2=0;
             flag=false;
         }
-        Log.d("ComprobacionValores","cryptC = " + cont2);
+        Log.d("ComprobacionValores","cryptC = " + cont3);
     }
     public void notificationcall(){
 
@@ -290,7 +310,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
                     .setTicker("CryptoMoneda")
                     .setSmallIcon(R.drawable.button)
                     .setPriority(Notification.PRIORITY_MAX) // this is deprecated in API 26 but you can still use for below 26. check below update for 26 API
-                    .setContentTitle("Twitter #Bitcoin")
+                    .setContentTitle("CryptApp")
                     .setContentText("Algo ha pasado!")
                     .setContentInfo("Cryptomoneda");
 

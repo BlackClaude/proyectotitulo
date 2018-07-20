@@ -20,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Twitter.initialize(this);
+        // Twitter.initialize(this);
         setContentView(R.layout.activity_main);
 
-        loginButton = (TwitterLoginButton) findViewById(R.id.Login_button);
+        /*loginButton = (TwitterLoginButton) findViewById(R.id.Login_button);
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         loginButton.onActivityResult(requestCode,resultCode,data);
+    }*/
     }
-
     public void buttonGoBeginner(View v){
-        Intent intent = new Intent(this, TwitterHome.class);
+        Intent intent = new Intent(this, Params.class);
         startActivity(intent);
     }
 

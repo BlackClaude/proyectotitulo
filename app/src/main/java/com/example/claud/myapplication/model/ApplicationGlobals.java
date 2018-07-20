@@ -30,4 +30,7 @@ public class ApplicationGlobals extends Application {
     public void setCantBitcoin(int CantBitcoin) {
         this.cantBitcoin = cantBitcoin;
     }
+
+
 }
+
