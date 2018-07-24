@@ -59,7 +59,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         thread.addListener(this);
         thread.start(); // inicia el hilo
         yVals1 = new ArrayList<>();
-        readCryptData();
+        //readCryptData();
 
         mLChart = findViewById(R.id.Lchart1);
         Bundle params = this.getIntent().getExtras();
@@ -76,7 +76,7 @@ public class Sim extends AppCompatActivity implements ActionListener{
         final TextView valorC = findViewById(R.id.textView7);
         final TextView wallet = findViewById(R.id.textView9);
         final TextView cantC = findViewById(R.id.textView);
-        final TextView dia = findViewById(R.id.dia);
+        //final TextView dia = findViewById(R.id.dia);
 
 
         valorC.setText("Valor ฿ :" + nuevoValor);
@@ -234,7 +234,8 @@ public class Sim extends AppCompatActivity implements ActionListener{
             Log.d("ComprobacionValores", "cont " + cont + " tiempo " + tiempo);
             valorC.setText("Valor ฿ :" + Math.round(nuevoValor));
             notificationcall();
-            Toast.makeText(this, "Se ha avanzado al Día "+cont+".", Toast.LENGTH_SHORT).show();
+            Toast t=Toast.makeText(this,"Se ha avanzado al Día "+(cont+1), Toast.LENGTH_SHORT);
+            t.show();
         }else{
             Bundle params = new Bundle();
             params.putFloat("inicial", inicial);
